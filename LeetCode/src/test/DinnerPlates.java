@@ -19,8 +19,8 @@ public class DinnerPlates {
 	
     public DinnerPlates(int capacity) {
     	stacks = new ArrayList<>();
-    	this.capacity = capacity;
     	noFullIndex = new TreeSet<>();
+    	this.capacity = capacity;
     }
     
     public void push(int val) {
@@ -43,33 +43,23 @@ public class DinnerPlates {
     }
     
     public int pop() {
-        if (stacks.isEmpty()) return -1;
-        
         int index = stacks.size() - 1;
         
-        int result = -1;
+        while (0 <= index && stacks.get(index).isEmpty()) {
+    		noFullIndex.remove(index);
+    		stacks.remove(index--);
+    	}
+        if (stacks.isEmpty()) return -1;
 
         Stack<Integer> stack = stacks.get(index);
-        result = stack.pop();
+        int result = stack.pop();
 
         if (!noFullIndex.contains(index)) noFullIndex.add(index);
-    	//isEmptyThenRemove(index);
-        int tmp = index;
-        if (stacks.get(tmp).isEmpty()) {
-        	while (0 <= tmp && stacks.get(tmp).isEmpty()) {
-        		noFullIndex.remove(tmp--);
-        		stacks.remove(stack);
-        	}
-        } else {
-        	noFullIndex.add(index);
-        }
-
         return result;
     }
     
     public int popAtStack(int index) {
     	if (stacks.size() <= index) return -1;
-    	if (index == stacks.size() - 1) return pop();
     	
     	Stack<Integer> stack = stacks.get(index);
     	int result = stack.isEmpty() ? -1 : stack.pop();
@@ -77,15 +67,6 @@ public class DinnerPlates {
     	if (!noFullIndex.contains(index)) noFullIndex.add(index);
     	
     	return result;
-    }
-    
-    public void isEmptyThenRemove(int index) {
-    	Stack<Integer> stack = stacks.get(index);
-    	if (stack.isEmpty()) {
-    		stacks.remove(stack);
-    		noFullIndex.remove(index);
-    	}
-    	//if (stack.isEmpty() && noFullIndex.contains(index)) noFullIndex.remove(index);
     }
     
     public static void main(String[] args) {
